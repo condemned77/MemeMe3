@@ -93,12 +93,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         self.presentViewController(imagePickerVC, animated: true, completion: nil)
     }
 
+
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         println("picking finished")
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
             self.imageView.image = image
-//            self.shareButton.enabled = true
         }
         self.memedImage = self.generateMemedImage()
         picker.dismissViewControllerAnimated(true, completion: nil)
@@ -109,7 +109,8 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         println("user canceled selection")
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
-    
+
+
     @IBAction func albumButtonPressed(sender: AnyObject) {
         let imagePickerVC = UIImagePickerController()
         imagePickerVC.delegate = self
@@ -117,4 +118,3 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         self.presentViewController(imagePickerVC, animated: true, completion: nil)
     }
 }
-
