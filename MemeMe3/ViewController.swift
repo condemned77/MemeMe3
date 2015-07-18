@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate{
     var memedImage: UIImage?
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
@@ -29,10 +29,10 @@ class ViewController: UIViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem = self.createShareButton()
-        self.navigationItem.rightBarButtonItem = self.createCancelButton()
-
+        self.navigationItem.leftBarButtonItem   = self.createShareButton()
+        self.navigationItem.rightBarButtonItem  = self.createCancelButton()
     }
+
 
     func shareButtonPressed() {
         self.memedImage = self.generateMemedImage()
@@ -42,7 +42,6 @@ class ViewController: UIViewController {
     
     func save() {
         //Create the meme
-        
         var meme = Meme(topText: self.topTextField.text!,
             bottomText: self.bottomTextField.text!,
             image: self.imageView.image!,
@@ -73,21 +72,49 @@ class ViewController: UIViewController {
         return memedImage
     }
     
-   
 
     func createCancelButton() -> UIBarButtonItem {
-        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "shareAction")
+        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showTabbar")
     }
     
     func createShareButton() -> UIBarButtonItem {
         return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareButtonPressed")
     }
 
-    func shareAction() {
+    func showTabbar() {
         let tabbarcon = self.storyboard?.instantiateViewControllerWithIdentifier("tabbarcon") as! UITabBarController
-
         self.showViewController(tabbarcon, sender: self)
     }
 
+    @IBAction func cameraButtonPressed(sender: UIBarButtonItem) {
+        let imagePickerVC = UIImagePickerController()
+        imagePickerVC.delegate = self
+        imagePickerVC.sourceType = UIImagePickerControllerSourceType.Camera
+        self.presentViewController(imagePickerVC, animated: true, completion: nil)
+    }
+
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        println("picking finished")
+        if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            self.imageView.contentMode = UIViewContentMode.ScaleAspectFit
+            self.imageView.image = image
+//            self.shareButton.enabled = true
+        }
+        self.memedImage = self.generateMemedImage()
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        println("user canceled selection")
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func albumButtonPressed(sender: AnyObject) {
+        let imagePickerVC = UIImagePickerController()
+        imagePickerVC.delegate = self
+        imagePickerVC.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        self.presentViewController(imagePickerVC, animated: true, completion: nil)
+    }
 }
 
