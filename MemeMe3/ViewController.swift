@@ -83,5 +83,11 @@ class ViewController: UIViewController {
         return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareButtonPressed")
     }
 
+    func shareAction() {
+        let tabbarcon = self.storyboard?.instantiateViewControllerWithIdentifier("tabbarcon") as! UITabBarController
+
+        self.showViewController(tabbarcon, sender: self)
+    }
+
 }
 

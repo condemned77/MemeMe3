@@ -18,7 +18,7 @@ class MemeMeTextField : UITextField {
     /*this method applies the desired textfield attributes to a provided text field instance.
     The font shall be as close as possible to the impact font.*/
     func applyTextFieldAttributes(){
-        self.textAlignment = NSTextAlignment.Center
+//        self.textAlignment = NSTextAlignment.Center
         let memeTextAttributes = [
             NSStrokeColorAttributeName : UIColor.blackColor(),
             NSForegroundColorAttributeName :  UIColor.whiteColor(),
