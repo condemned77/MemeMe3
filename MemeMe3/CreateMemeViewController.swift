@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate{
+class CreateMemeViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate{
     var memedImage: UIImage?
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
@@ -29,12 +29,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.leftBarButtonItem   = self.createShareButton()
-        self.navigationItem.rightBarButtonItem  = self.createCancelButton()
+//        self.navigationItem.leftBarButtonItem   = self.createShareButton()
+//        self.navigationItem.rightBarButtonItem  = self.createCancelButton()
     }
 
 
-    func shareButtonPressed() {
+    @IBAction func shareButtonPressed() {
         self.memedImage = self.generateMemedImage()
         let activityVC = UIActivityViewController(activityItems: [self.memedImage as! AnyObject], applicationActivities: nil)
         self.presentViewController(activityVC, animated: true, completion: {self.save()})
@@ -45,7 +45,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         var meme = Meme(topText: self.topTextField.text!,
             bottomText: self.bottomTextField.text!,
             image: self.imageView.image!,
-            memedImage: self.memedImage)
+            memedImage: self.memedImage!)
         
         // Add it to the memes array in the Application Delegate
         let object = UIApplication.sharedApplication().delegate
@@ -73,12 +73,16 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     }
     
 
-    func createCancelButton() -> UIBarButtonItem {
-        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showTabbar")
-    }
-    
-    func createShareButton() -> UIBarButtonItem {
-        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareButtonPressed")
+//    func createCancelButton() -> UIBarButtonItem {
+//        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: "showTabbar")
+//    }
+//    
+//    func createShareButton() -> UIBarButtonItem {
+//        return UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "shareButtonPressed")
+//    }
+
+    @IBAction func cancelButtonPressed() {
+        self.showTabbar()
     }
 
     func showTabbar() {
@@ -114,6 +118,9 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
     @IBAction func albumButtonPressed(sender: AnyObject) {
         let imagePickerVC = UIImagePickerController()
         imagePickerVC.delegate = self
+//        let object = UIApplication.sharedApplication() as AppDelegate
+//        let object.memes 
+
         imagePickerVC.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         self.presentViewController(imagePickerVC, animated: true, completion: nil)
     }
