@@ -36,7 +36,7 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="tQI-1u-4eB"/>
-                                    <barButtonItem tag="-1" title="Camera" id="Fnd-TJ-wVX">
+                                    <barButtonItem tag="-1" systemItem="camera" id="Fnd-TJ-wVX">
                                         <connections>
                                             <action selector="cameraButtonPressed:" destination="vXZ-lx-hvc" id="EfK-TU-tUs"/>
                                         </connections>
@@ -107,6 +107,8 @@
                         <outlet property="bottomTextField" destination="uH5-fm-GfL" id="008-hX-aw5"/>
                         <outlet property="cameraButton" destination="Fnd-TJ-wVX" id="HRV-dD-cdg"/>
                         <outlet property="imageView" destination="fly-qZ-rFf" id="uMi-Dx-yrg"/>
+                        <outlet property="navigationBar" destination="9Jb-lv-Tqe" id="hp5-dD-BwD"/>
+                        <outlet property="toobar" destination="HJl-eg-Q2f" id="agx-TX-p9M"/>
                         <outlet property="topTextField" destination="1zW-55-pmD" id="n1a-pS-Lql"/>
                     </connections>
                 </viewController>
@@ -175,8 +177,8 @@
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="HvN-lE-ebe" id="IUc-rk-YgK"/>
-                            <outlet property="delegate" destination="HvN-lE-ebe" id="oot-fm-pff"/>
+                            <outlet property="dataSource" destination="HvN-lE-ebe" id="cPL-pr-BJ6"/>
+                            <outlet property="delegate" destination="HvN-lE-ebe" id="dIl-VN-4Ey"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Sent Memes" id="Btb-91-USD">
@@ -288,6 +290,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="jkX-5F-VgX" id="W1k-Rw-Nys"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e00-rL-cC3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

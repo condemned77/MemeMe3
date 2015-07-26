@@ -8,6 +8,12 @@
 
 import Foundation
 import UIKit
+
+/*Meme storage struct. This struct stores all information about a Meme/
+It offers a description method which concatinates the top and bottom text of a Meme.
+In addition, the variable defaultMemes allows for accessing a few default Memes. 
+However, the corresponding structs doesn't have access to the un-Meme'd image version of 
+the Meme image.*/
 struct Meme {
 
     let topText         : String

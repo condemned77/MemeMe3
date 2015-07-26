@@ -16,6 +16,9 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     @IBOutlet weak var albumButton: UIBarButtonItem!
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var topTextField: UITextField!
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var toobar: UIToolbar!
+    
     var textFieldDelegate : MemeMeTextFieldDelegate? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +28,10 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
         self.textFieldDelegate = MemeMeTextFieldDelegate(topTextField: self.topTextField, andBottomTextField: self.bottomTextField)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+    /*Callback method when the will appear.
+    Here the keyboard notification subscripting will be established,
+    and the camera button we be disabled if a camera isn't avilable, e.g.
+    when the application is run on a simulator.*/
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.subscribeToKeyboardNotifications()
@@ -37,18 +39,37 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     }
 
 
+    //unsubscribe when the ViewVontroller will be dismissed.
     override func viewWillDisappear(animated: Bool) {
         self.unsubscribeFromKeyboardNotifications()
     }
 
+
+    /*callback method for the share button. This method presents the UIActivityView for sharing
+    the created Meme. It's only possible to share the Meme if a Meme has been created.*/
     @IBAction func shareButtonPressed() {
         if self.imageView.image != nil {
 
             self.memedImage = self.generateMemedImage()
             let activityVC = UIActivityViewController(activityItems: [self.memedImage as! AnyObject], applicationActivities: nil)
-            self.presentViewController(activityVC, animated: true, completion: {self.save()})
+            activityVC.completionWithItemsHandler = self.activityViewControllerCompleted
+            self.presentViewController(activityVC, animated: true, completion: nil)
         } else {
             self.showAlertView("No Meme created, please add a photo from your album or take a photo.")
+        }
+    }
+
+
+    /*callback method for when the ActivityView is dismissed. This method has to conform to
+    the declaration of completionWithItemsHandler of the class UIActivityViewController.*/
+    func activityViewControllerCompleted(activityTpe : String?, completed : Bool, returnedItems: [AnyObject]!, error : NSError!) -> Void{
+
+        if completed {
+            print("activity vc completed");
+            self.saveMeme()
+            self.dismissViewControllerAnimated(true, completion: nil)
+        } else {
+            println("Not completed")
         }
     }
 
@@ -61,7 +82,8 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     }
 
 
-    func save() {
+    //This method stores the Meme within the global (shared) data container.
+    func saveMeme() {
         //Create the meme
         var meme = Meme(topText: self.topTextField.text!,
                      bottomText: self.bottomTextField.text!,
@@ -72,34 +94,36 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
         let object = UIApplication.sharedApplication().delegate
         let appDelegate = object as! AppDelegate
         appDelegate.memes.append(meme)
+        println("Meme: \(meme) saved. Meme count: \(appDelegate.memes.count)")
     }
-    
+
+
+    //this method create the Memed imaged and returns the newly created UIImage instance.
     func generateMemedImage() -> UIImage {
         
-        self.navigationController?.setToolbarHidden(true, animated: false)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.toggleViewBarsVisibility()
+
         // Render view to an image
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        self.view.drawViewHierarchyInRect(self.view.frame,
+        UIGraphicsBeginImageContext(self.imageView.frame.size)
+        self.view.drawViewHierarchyInRect(self.imageView.frame,
             afterScreenUpdates: true)
         let memedImage : UIImage =
         UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        self.navigationController?.setToolbarHidden(false, animated: false)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.toggleViewBarsVisibility()
         return memedImage
+    }
+
+    //allows to toggle between showing the navigation and tool bar and hiding them.
+    func toggleViewBarsVisibility() {
+        self.navigationBar.hidden   = !self.navigationBar.hidden
+        self.toobar.hidden          = !self.toobar.hidden
     }
 
     //callback method for the cancel button
     @IBAction func cancelButtonPressed() {
         self.dismissViewControllerAnimated(true, completion: nil)
-    }
-
-
-    func showTabbar() {
-        let tabbarcon = self.storyboard?.instantiateViewControllerWithIdentifier("tabbarcon") as! UITabBarController
-        self.showViewController(tabbarcon, sender: self)
     }
 
 
@@ -109,6 +133,8 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     }
 
 
+    /*This method creates an UIImagePickerController instance and configures it in such a way
+    that it accesses the device camera.*/
     func pickAnImageFromCamera() {
         let imagePickerVC = UIImagePickerController()
         imagePickerVC.delegate = self
@@ -117,34 +143,34 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     }
 
 
+    /*delegate method that is called when the user has choosen an image from the UIImagePickerController.
+    When an image has been choosen from the image picker, or an image has been taken using 
+    the camera, the image is stored in the imageView of this ViewController.
+    */
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
         println("picking finished")
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             self.imageView.contentMode  = UIViewContentMode.ScaleAspectFit
             self.imageView.image        = image
         }
-        self.memedImage = self.generateMemedImage()
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
 
-
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        println("user canceled selection")
-        picker.dismissViewControllerAnimated(true, completion: nil)
-    }
-
-
+    //callback method for when the album button is pressed.
     @IBAction func albumButtonPressed(sender: AnyObject) {
         self.pickAnImageFromAlbum()
     }
 
 
+    /*This method create a UIImagePickerController which accesses the user's
+    photos.*/
     func pickAnImageFromAlbum() {
         let imagePickerVC = UIImagePickerController()
         imagePickerVC.delegate = self
         imagePickerVC.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         self.presentViewController(imagePickerVC, animated: true, completion: nil)
     }
+
 
     /*this method applies the desired textfield attributes to a provided text field instance.
     The font shall be as close as possible to the impact font.*/
@@ -196,6 +222,7 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     }
 
 
+    //This method calculates and returns the keyboard height.
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
         let userInfo = notification.userInfo
         let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect

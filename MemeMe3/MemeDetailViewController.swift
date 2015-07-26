@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-
+//ViewController for displaying a created Meme in a larger version.
 class MemeDetailViewController : UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     var memeImage : UIImage? = nil

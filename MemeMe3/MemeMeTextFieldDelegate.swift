@@ -22,10 +22,9 @@ class MemeMeTextFieldDelegate : NSObject, UITextFieldDelegate {
         bottomTextField.delegate    = self
     }
 
-    /*Callback that is used for capitalizing all text inputs.
-    Setting the attribute/property on the textfield doesn't 
-    work, therefore this callback has been implemented to do
-    the job.*/
+
+    /*This callback method empties the top and bottom textfield when
+    a user start to edit the textfield and the include their default strings.*/
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool{
         if textField.text == "TOP" && textField === self.topTextField {
             textField.text = ""
@@ -39,7 +38,10 @@ class MemeMeTextFieldDelegate : NSObject, UITextFieldDelegate {
         return true
     }
 
-
+    /*Callback method that is used for capitalizing all text inputs.
+    Setting the attribute/property on the textfield doesn't
+    work, therefore this callback has been implemented to do
+    the job.*/
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
 
         if string.capitalizedString != string {
@@ -50,7 +52,7 @@ class MemeMeTextFieldDelegate : NSObject, UITextFieldDelegate {
         }
     }
 
-    
+    //Callback method that allows edition the textfield
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         return textField.endEditing(true)
     }
