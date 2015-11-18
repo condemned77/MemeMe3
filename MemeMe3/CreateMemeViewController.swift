@@ -52,7 +52,18 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
 
             self.memedImage = self.generateMemedImage()
             let activityVC = UIActivityViewController(activityItems: [self.memedImage as! AnyObject], applicationActivities: nil)
-            activityVC.completionWithItemsHandler = self.activityViewControllerCompleted
+            activityVC.completionWithItemsHandler = {activityTpe, completed, returnedItems, error in
+                
+                if completed {
+                    print("activity vc completed", terminator: "");
+                    self.saveMeme()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                } else {
+                    print("Not completed")
+                }
+            
+            }
+            //activityVC.completionWithItemsHandler = self.activityViewControllerCompleted
             self.presentViewController(activityVC, animated: true, completion: nil)
         } else {
             self.showAlertView("No Meme created, please add a photo from your album or take a photo.")
@@ -65,18 +76,18 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     func activityViewControllerCompleted(activityTpe : String?, completed : Bool, returnedItems: [AnyObject]!, error : NSError!) -> Void{
 
         if completed {
-            print("activity vc completed");
+            print("activity vc completed", terminator: "");
             self.saveMeme()
             self.dismissViewControllerAnimated(true, completion: nil)
         } else {
-            println("Not completed")
+            print("Not completed")
         }
     }
 
     /*convenience method for showing a simple alert with a
     message (passed as parameter)*/
     func showAlertView(message: String) {
-        var alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }
@@ -85,7 +96,7 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     //This method stores the Meme within the global (shared) data container.
     func saveMeme() {
         //Create the meme
-        var meme = Meme(topText: self.topTextField.text!,
+        let meme = Meme(topText: self.topTextField.text!,
                      bottomText: self.bottomTextField.text!,
                           image: self.imageView.image!,
                      memedImage: self.memedImage!)
@@ -94,7 +105,7 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
         let object = UIApplication.sharedApplication().delegate
         let appDelegate = object as! AppDelegate
         appDelegate.memes.append(meme)
-        println("Meme: \(meme) saved. Meme count: \(appDelegate.memes.count)")
+        print("Meme: \(meme) saved. Meme count: \(appDelegate.memes.count)")
     }
 
 
@@ -147,8 +158,8 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
     When an image has been choosen from the image picker, or an image has been taken using 
     the camera, the image is stored in the imageView of this ViewController.
     */
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        println("picking finished")
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        print("picking finished")
         if let image = info["UIImagePickerControllerOriginalImage"] as? UIImage {
             self.imageView.contentMode  = UIViewContentMode.ScaleAspectFit
             self.imageView.image        = image

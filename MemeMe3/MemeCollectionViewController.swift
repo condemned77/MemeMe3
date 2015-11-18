@@ -20,7 +20,7 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDataSource
         self.collectionView.reloadData()
     }
 
-    required init(coder aDecoder:  NSCoder) {
+    required init?(coder aDecoder:  NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -56,7 +56,7 @@ class MemeCollectionViewController: UIViewController, UICollectionViewDataSource
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let meme = self.memes[indexPath.row]
 
-        var memeDetailVC = self.storyboard?.instantiateViewControllerWithIdentifier("DetailVC") as! MemeDetailViewController
+        let memeDetailVC = self.storyboard?.instantiateViewControllerWithIdentifier("DetailVC") as! MemeDetailViewController
         self.navigationController?.pushViewController(memeDetailVC, animated: true)
         memeDetailVC.memeImage = meme.memedImage
     }

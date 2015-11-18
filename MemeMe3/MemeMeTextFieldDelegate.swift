@@ -45,7 +45,7 @@ class MemeMeTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
 
         if string.capitalizedString != string {
-            textField.text = textField.text + string.capitalizedString
+            textField.text = textField.text! + string.capitalizedString
             return false
         } else {
             return true

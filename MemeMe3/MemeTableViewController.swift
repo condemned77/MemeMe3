@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-class MemeTableViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource {
+class MemeTableViewController: UITableViewController {
 
     var memes : [Meme]  {
         let appdelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         return appdelegate.memes
     }
 
-    required init!(coder aDecoder: NSCoder!){
+    required init!(coder aDecoder: NSCoder){
         super.init(coder: aDecoder)
     }
 
@@ -38,7 +38,7 @@ class MemeTableViewController: UITableViewController, UITableViewDelegate, UITab
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let meme = self.memes[indexPath.row]
 
-        var memeDetailVC = self.storyboard?.instantiateViewControllerWithIdentifier("DetailVC") as! MemeDetailViewController
+        let memeDetailVC = self.storyboard?.instantiateViewControllerWithIdentifier("DetailVC") as! MemeDetailViewController
         self.navigationController?.pushViewController(memeDetailVC, animated: true)
         memeDetailVC.memeImage = meme.memedImage
     }
@@ -46,11 +46,10 @@ class MemeTableViewController: UITableViewController, UITableViewDelegate, UITab
 
         //delegate method for returning the amount of items in the collection view.
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-
-        let cell = tableView.dequeueReusableCellWithIdentifier("memeCell") as! UITableViewCell
-        cell.imageView?.image = self.memes[indexPath.row].memedImage
-        cell.textLabel?.text = self.memes[indexPath.row].description()
-        return cell
+        let cell = tableView.dequeueReusableCellWithIdentifier("memeCell")
+        cell!.imageView?.image = self.memes[indexPath.row].memedImage
+        cell!.textLabel?.text = self.memes[indexPath.row].description()
+        return cell!
     }
 
     //callback for adding the + button

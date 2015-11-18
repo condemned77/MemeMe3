@@ -14,12 +14,12 @@ class MemeDetailViewController : UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     var memeImage : UIImage? = nil
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
     override func viewDidLoad() {
-        println("viewDidLoad: imageView is \(self.imageView)")
+        print("viewDidLoad: imageView is \(self.imageView)")
         self.imageView.image =  memeImage
     }
 }
