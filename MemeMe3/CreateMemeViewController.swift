@@ -28,9 +28,9 @@ class CreateMemeViewController: UIViewController, UINavigationControllerDelegate
         self.textFieldDelegate = MemeMeTextFieldDelegate(topTextField: self.topTextField, andBottomTextField: self.bottomTextField)
     }
 
-    /*Callback method when the will appear.
+    /*Callback method when the view will appear.
     Here the keyboard notification subscripting will be established,
-    and the camera button we be disabled if a camera isn't avilable, e.g.
+    and the camera button will be disabled if a camera isn't avilable, e.g.
     when the application is run on a simulator.*/
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
